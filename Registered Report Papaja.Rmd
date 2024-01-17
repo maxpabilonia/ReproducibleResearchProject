@@ -1,0 +1,639 @@
+---
+title             : "Investigating the Correlation Between Precipitation During Early Stages of the Ixodes Scapularis Life Cycle and Lyme Disease Cases the Following Year in Emerging Endemic Regions"
+shorttitle        : "Precipitation And Lyme Disease"
+
+author: 
+  - name          : "Max Pabilonia"
+    affiliation   : "1"
+
+affiliation:
+  - id            : "1"
+    institution   : "Haverford College"
+
+authornote: |
+  This is a project I prepared for Prof. Albert's Reproducible Research class during Spring 2022 at Bryn Mawr College.
+
+abstract: |
+ Lyme disease is the most common vector-borne disease in the United States. Originating from the Northeast, the disease is currently spreading from its usual endemic region and cases are rising in the Mid-Atlantic and Midwest. Due to a lack of accurate diagnostic tests and effective treatments for this condition, there is an interest in public health campaigns to prevent human infection. The ability to predict Lyme disease risk and further spread of the disease would therefore be beneficial when determining which populations to target with education on Lyme disease prevention. It has been previously hypothesized that understanding the impact of weather variables on the tick lifecycle may aid in the prediction of Lyme disease risk. Past research has shown that moisture levels within the Ixodes scapularis habitat are critical for tick survival and that precipitation is positively correlated with Lyme disease cases in long-term endemic areas. However, the effect of precipitation during the overwintering period and tick developmental periods on the success of Lyme disease transmission in emerging endemic regions has not been fully characterized. This study investigated whether there is a correlation between precipitation during four key stages of the early tick life cycle and Lyme disease cases reported from counties in emerging endemic states in the Mid-Atlantic and Midwest. A weak correlation was found between precipitation during the larvae questing period and Lyme disease cases reported to the CDC the following year. A weak correlation was also found between precipitation during the nymph questing period and Lyme disease cases reported that same year. This indicates that precipitation may be a factor to include in future modeling efforts to predict the spread of Lyme disease due to our changing climate.
+  
+  <!-- https://tinyurl.com/ybremelq -->
+  
+keywords          : "Lyme disease, I. scapularis"
+
+bibliography      : "Bibliography.bib"
+
+floatsintext      : no
+linenumbers       : no
+draft             : no
+mask              : no
+
+figurelist        : yes
+tablelist         : yes
+footnotelist      : no
+
+classoption       : "man"
+output            : papaja::apa6_pdf
+header-includes   :
+  - \usepackage{setspace}
+  - \captionsetup[figure]{font={stretch=1,scriptsize}}
+---
+## Introduction
+
+It is estimated that approximately 476,000 people contract Lyme disease each year in the United States [@cdcLymeDiseaseData2021]. The causative agent of Lyme disease is the bacteria Borrelia burgdorferi, which is spread to humans through the bite of the black-legged tick Ixodes scapularis [@cdcTransmissionLymeDisease2020]. Ticks have their first opportunity to contract the bacteria from the blood of a mammal during their first blood meal, which usually takes place in August or September [@fishPopulationEcologyIxodes1993]. After feeding, the ticks molt into their next life stage and then must survive the winter. After overwintering in a low-energy state called diapause, nymph ticks undergo a developmental period from March through May and then quest for their next blood meal from May through July [@heaneyRelationsPeriresidentialTemperature2021]. This second questing period is their second opportunity to contract B. burgdorferi and their first opportunity to transmit it. This is the most common time that ticks transmit Lyme disease to humans [@cdcTransmissionLymeDisease2020; @pepinGeographicVariationRelationship2012]. This is partially attributed to the small size of nymph ticks. Due to the anesthetic that ticks inject into a mammal when they feed, such a small tick can easily go unnoticed [@cdcTransmissionLymeDisease2020].  
+Of great concern is the fact that despite the disease being discovered over 40 years ago, the diagnostic tests and treatments available for Lyme disease are unreliable. There is currently no diagnostic test that can affirmatively determine whether Borrelia bacteria is present or whether it has been eradicated from the human body [@dontaWhatWeKnow2022]. The current diagnostic tests relying on antibodies cannot always return a positive result until the patient has generated antibodies against B. burgdorferi, which may take several weeks following infection [@cdcDiagnosisTestingLyme2021]. Delayed diagnosis until after the infection has reached the central nervous system is thought to be one reason why a significant percentage of patients fail antibiotic treatment [@aucottPosttreatmentLymeDisease2013].  
+It is thought that treatment failure occurs due to the presence of antibiotic tolerant persister cells or biofilm colonies. However, the role each factor plays in persistent infection is still unclear and there is great controversy over how these patients should be treated [@didomenicoEmergingRoleMicrobial2018b and @dontaWhatWeKnow2022]. Because of a lack of alternative treatments after antibiotics fail, many patients present with persistent symptoms and a quality of life rated on par with patients that have congestive heart failure [@johnsonSeverityChronicLyme2014]. This gives context as to why Lyme disease may be a factor in over a thousand suicides in the U.S. each year [@bransfieldSuicideLymeAssociated2017].   
+Due to the significant public health burden of Lyme disease, educational campaigns aimed at equipping communities with Lyme disease prevention tactics are of interest [@beckKnowledgeAttitudesBehaviors2022]. This is because increased public awareness is an intervention that has been found to reduce Lyme disease risk [@shararehModelbasedRiskAssessment2017]. For example, @beckKnowledgeAttitudesBehaviors2022 found that people living in Lyme endemic areas of the Upper Midwest who had seen health department information about preventing Lyme disease were more likely to take Lyme disease prevention measures. This type of intervention may also be more successful in reducing Lyme disease cases than other commonly suggested interventions such as using insecticide to reduce tick populations or reducing the mouse population so that there are fewer B. burgdorferi-infected mammals available for ticks to feed on [@hinckleyEffectivenessResidentialAcaricides2016; @shararehModelbasedRiskAssessment2017].   
+Because Lyme disease cases have dramatically risen outside of the original endemic area in the Northeastern U.S. where the disease was first discovered in 1982, it is important to consider new regions to target with public awareness campaigns [@burgdorferLymeDiseaseaTickborne1982; @cdcLymeDiseaseData2021]. Lyme disease risk also varies year to year in endemic regions [@cdcLymeDiseaseData2021]. If there was a way to predict the spread of the disease or the risk of contracting it in certain regions, communities could be better targeted with these public awareness campaigns. In order to work toward the development of such a model, it is important to first characterize the factors that affect Lyme disease risk.   
+It is thought that weather may play a role in the incidence of Lyme disease cases and that climate change may be influencing the spread of tick-borne diseases [@burtisImpactTemperaturePrecipitation2016; @ostfeldClimateChangeIxodes2015; @zhangProjectingPotentialDistribution2022]. This is because weather variables have been found to affect the survival, density, development, fertility and questing behavior of I. scapularis [@bergerRelativeHumidityActivity2014; @burtisImpactTemperaturePrecipitation2016; @heaneyRelationsPeriresidentialTemperature2021; @mccabePrecipitationOccurrenceLyme2004; @rodgersDurationExposureSuboptimal2007; @volkMicroclimateConditionsAlter2022]. Weather variables also affect human behaviors that could affect Lyme disease risk, such as choosing to stay indoors during bad weather [@wagnerImpactWeatherSummer2019]. If the relationship between weather variables and Lyme disease cases in newer endemic regions was better understood, weather forecasting may make it possible to predict Lyme disease risk.   
+The effect of precipitation on the incidence of Lyme disease is of interest because it is an important factor in creating an environment that is favorable for ticks [@zhangProjectingPotentialDistribution2022]. This is because high moisture levels are key to I. scapularis survival, development, and questing activity [@heaneyRelationsPeriresidentialTemperature2021; @lefcortEffectInfectionLyme1996; @volkMicroclimateConditionsAlter2022]. When it comes to tick survival, sustained moisture is especially important within the leaf litter where ticks overwinter or burrow to re-hydrate [@rodgersDurationExposureSuboptimal2007]. @rodgersDurationExposureSuboptimal2007 found in their laboratory study that 60% of nymph I. scapularis ticks survived for 24 hours at 82% relative humidity. However, if the ticks were returned to saturated air to re-hydrate daily, survival was much higher. A field study by [@bergerRelativeHumidityActivity2014] supported that nymph tick activity decreased when the relative humidity in the leaf litter fell below the optimal level of 82%. They also found that low precipitation causes the relative humidity in the leaf litter to fall below sub-optimal levels for tick survival. In addition to precipitation aiding tick survival through the addition of moisture to the leaf litter, ticks can also survive harsh winter temperatures due to the insulation provided by snow cover [@volkMicroclimateConditionsAlter2022].   
+While precipitation may aid ticks in surviving cold and dry winter days, there is evidence that the number of days with precipitation may also be a factor in Lyme disease risk during the months of March, April, and May, when nymph ticks undergo a developmental phase as the winter ends [@heaneyRelationsPeriresidentialTemperature2021]. During the questing period that follows from May through July, moisture from precipitation also makes it possible for ticks to quest at higher heights, making it more likely that they will be able to latch onto a mammal they can take a blood meal from [@lefcortEffectInfectionLyme1996].   
+Even though this association between precipitation, moisture in microclimates, and tick behavior has been extensively characterized, it is of interest to note that an increase in nymph tick density does not necessarily lead to an increase in Lyme disease cases or tick bites [@hinckleyEffectivenessResidentialAcaricides2016]. This supports that a study on how weather variables affect Lyme disease cases may reveal insights that microcosm studies on tick survival do not.   
+Previous studies that investigated precipitation with Lyme disease risk have focused on areas of the Northeast that have been endemic areas for Lyme disease for at least several decades [@burtisImpactTemperaturePrecipitation2016; @mccabePrecipitationOccurrenceLyme2004]. @burtisImpactTemperaturePrecipitation2016 investigated the association between Lyme disease cases and the number of days with precipitation during the nymph and larval questing periods. The researchers found no impact of the number of days where precipitation occurred during the larval questing periods on Lyme disease incidence. They only found a correlation between the number of days where precipitation was present during the nymph questing period and human Lyme disease cases reported in long-term endemic areas. They did not include all newer endemic areas in the Mid-Atlantic in their analysis (Maryland and Virginia were omitted). They also did not include the Upper Midwest at all, nor did they investigate the effect of winter precipitation, precipitation during the nymph developmental period, or total precipitation over any point in the tick life cycle.  
+@mccabePrecipitationOccurrenceLyme2004 did find a correlation between the amount of precipitation in May and June and the incidence of Lyme disease cases that immediately followed. However, they only investigated the Northeastern United States and did not include newer endemic areas in the Mid-Atlantic or Upper Midwest in their analysis. In the decades since their study, cases in these regions have risen significantly. It is clear that there needs to be more investigation of the correlation between the amount of precipitation occurring during key areas of the tick life cycle and Lyme disease cases in emerging endemic areas.   
+In this study, I investigated whether there is a correlation between the total precipitation during the larvae and nymph questing periods, the overwintering period, the nymph developmental period in early spring, and Lyme disease cases reported to the CDC in 2019. My hypothesis was that increased precipitation during each of these stages of the early tick life cycle would be positively correlated with the number of Lyme disease cases reported to the CDC during the year the nymph ticks begin to quest. 
+
+## Methods
+
+This study was an observational study. It investigated the correlation between Lyme disease cases per capita in emerging endemic counties in 2019 and the total precipitation during four stages of the I. scapularis life cycle prior to adulthood. The counties that were included in this analysis were all of the counties in states that are considered emerging endemic areas for Lyme disease: Virginia, Maryland, Delaware, Pennsylvania, Minnesota, and Wisconsin. Each of these states is classified by the CDC to be a high-incidence region for Lyme disease but does not make up part of the long-term endemic region in the Northeast [@burtisImpactTemperaturePrecipitation2016; @cdcLymeDiseaseData2021]. The unincorporated cities in Virginia were also included in the analysis, as these cities include areas of the state which are not assigned to a county but represent a similar-sized geographic area.  
+The number of Lyme disease cases reported to the CDC for each county of interest in 2019 was accessed from the CDC website (https://www.cdc.gov/lyme/stats/survfaq.html). Calculating Lyme disease cases per capita in each county allowed for a population-adjusted measure to compare Lyme disease risk between geographic regions that contain different amounts of people. This is the common method used to approximate Lyme disease risk among counties by previous studies on factors that affect the risk of Lyme disease [@cdcLymeDiseaseData2021; @ostfeldBiodiversityDiseaseRisk2000]. The number of cases per capita (incidence rate per 100,000 individuals) for each county was calculated using the number of cases per county and census data for the population of each county during 2019. Population data for each county of interest in 2019 was downloaded from the Census Bureau website: (https://www.census.gov/). The equation used to calculate the incidence rate of Lyme disease was: $(Cases/Population) * 100,000$. Weather data on precipitation was downloaded from the Climate at a Glance Tool on the National Oceanic and Atmospheric Administration (NOAA) website (https://www.ncdc.noaa.gov/). This tool was used to generate monthly precipitation data for each county in a U.S. state from 1895 to the present. This data was extracted from the U.S. Climate Divisional Database, which contains past data from local weather stations in each county in the United States. These weather stations are located in places that have a climate representative of the region. Each weather station contains a wind-shielded, weighing precipitation gauge with three sensors that can measure precipitation depth changes in millimeters at 5-minute intervals. This data is then transmitted to a geostationary satellite on an hourly basis (National Centers for Environmental Information).   
+Four stages of the tick life cycle prior to adulthood were evaluated to determine whether there was a correlation between total precipitation and the number of Lyme disease cases reported to the CDC. The following four stages were evaluated: 
+
+1) Larval tick questing period (August-October of the proceeding year)
+
+2) Overwintering period (October-March of the current year)
+
+3) Nymph development period (March-June of the current year)
+
+4) Nymph questing period (May-August of the current year)
+
+The effect of precipitation during the larval tick questing period and the nymph questing period on Lyme disease cases were both evaluated because precipitation and moisture affect the ability of ticks to crawl to higher questing heights which may increase the success of securing a blood meal [@lefcortEffectInfectionLyme1996].  
+The overwintering period was included in this analysis because winter precipitation in these emerging endemic regions has not been previously evaluated for its effect on Lyme disease cases the following year. It is also important to assess precipitation during the period of nymph tick development since previous research has found that the number of days precipitation occurred in Pennsylvania during this period correlated with the number of Lyme disease cases in electronic medical records [@heaneyRelationsPeriresidentialTemperature2021]. It was therefore presumed to be possible that there may also be a correlation between the total precipitation in emerging endemic regions during the nymph tick development period and Lyme disease incidence.  
+Total precipitation in each county was used in my analysis because a correlation between precipitation totals during early I. scapularis life stages and Lyme disease has not been investigated before in emerging endemic regions. The need for this type of analysis has been suggested by past studies and total precipitation as a measurement has been validated before for this type of analysis when an association between precipitation and questing activity of a related tick, Ixodes pacificus, was found [@heaneyRelationsPeriresidentialTemperature2021; @macdonaldTrackingSeasonalActivity2019].
+
+## Results
+
+Pearson’s correlation coefficient was calculated to determine the correlation between total precipitation during an early stage of the tick life cycle and Lyme disease cases per capita. A Bonferroni correction was performed to account for the multiple comparisons that were run. In total, precipitation data and the Lyme disease incidence rate from 383 counties and Virginia’s independent cities across the emerging endemic states were included in this analysis. This means that the study had a 96% probability of detecting a correlation of r = 0.1 at a significance level of 0.0125. This probability was calculated using the Al-Therapy Stats sample size calculator: (https://www.ai-therapy.com/psychology-statistics/sample-size-calculator). While a significance threshold of 0.05 is commonly used in this field, the significance level that was used in this analysis was 0.0125 due to the need for the Bonferroni correction. For statistically significant correlations that were found, the coefficient of determination was calculated by squaring the correlation coefficient. Results from this statistical analysis of the data can be found in Tables 1-4 and Figures 1-4.   
+When the total precipitation during each of these four early stages of the tick life cycle was plotted on a scatterplot with Lyme disease cases reported to the CDC, it appeared that data from each of the two regions I investigated (Mid-Atlantic and Upper Midwest) clustered together. This prompted me to conduct an exploratory analysis of the dataset where I calculated Pearson’s correlation coefficient again the same way I had before but while grouping the data by region.   
+This exploratory analysis yielded a slightly different result than my planned analysis and can be found in Tables 5-12. There was a statistically significant weak positive correlation between total precipitation during the larvae questing period and Lyme disease cases in the Mid-Atlantic the following year but no correlation was detected for the Upper Midwest. The spread of Lyme disease has sometimes been described in the literature to originate from two epicenters, one located in the Northeastern United States and the other in the Upper Midwest [@burtisImpactTemperaturePrecipitation2016]. Precipitation may play a different role in the rise of Lyme disease cases in the Upper Midwest than in the Mid-Atlantic and further studies should look at the weight of the different factors that are causing the spread of Lyme disease in these two regions. 
+
+## Discussion
+
+A weak but statistically significant positive correlation was detected between total precipitation during the larval tick questing period and Lyme disease cases reported to the CDC during the following year. There was a stronger but still weak statistically significant positive correlation between total precipitation during the nymph tick questing period and Lyme disease cases reported to the CDC that same year. This provides some evidence for my hypothesis that greater amounts of precipitation during these early stages of tick life cycle may be a factor in rising cases of Lyme disease in emerging endemic areas. I had hypothesized that there would be a correlation because of previous research suggesting that ticks would be more likely to be able to feed on a host and contract or transmit B. burgdorferi if more moisture was present [@lefcortEffectInfectionLyme1996].   
+While these correlations are statistically significant, the r^2 values are very small, meaning that only a small percentage of the variance in Lyme disease cases per capita in the counties investigated in this study can be explained by the relationship with precipitation during these stages of the early tick life cycle. The fact that there is only a weak correlation supports that many other factors play a larger role in the rising number of Lyme disease cases in these emerging endemic areas. In addition to precipitation, other factors such as rising global temperatures, the mobilization of B. burgdorferi infected ticks to new regions through migratory songbirds, and acorn masting years have been linked to rising Lyme disease cases [@heaneyRelationsPeriresidentialTemperature2021; @ostfeldClimateDeerRodents2006; @scottLymeDiseasePropelled2018].  
+No correlation was detected between total precipitation during the nymph developmental period or overwintering period and Lyme disease cases reported to the CDC that year. These results were not what I had hypothesized. I had assumed that less precipitation would mean that less ticks would survive the overwintering period and develop as nymphs, which would result in less ticks to transmit Lyme disease. However, while ticks are highly sensitive to moisture levels and subfreezing temperatures, they are also extremely hardy creatures that are able to survive harsh winters in environments that insulate them [@eisenLinkagesWeatherClimate2016; @rodgersDurationExposureSuboptimal2007].   
+Past studies have elucidated why ticks overwinter in leaf litter. It is incredibly reliable for insulating ticks from the persistent lethal conditions that exist outside this typical diapause location [@bergerRelativeHumidityActivity2014; @linskeImpactsDeciduousLeaf2019]. Moisture levels also remain very high in leaf litter even when they drop outside and moisture levels fluctuate throughout the day with higher levels usually being observed at nighttime, which aids in tick survival even when they are exposed to long daytime periods with low levels of humidity [@bergerRelativeHumidityActivity2014; @rodgersDurationExposureSuboptimal2007]. It may be possible that ticks are so resilient to lethal outside weather conditions while in the leaf litter that a lack of winter and early spring precipitation does not have as much effect as when ticks are out questing during the summer and fall.  
+Previous research has suggested that the abundance of ticks nearby does not necessarily determine whether there will be more cases of Lyme disease in the area [@hinckleyEffectivenessResidentialAcaricides2016]. In fact, @hinckleyEffectivenessResidentialAcaricides2016 found that when residential areas were treated with acaricide to kill ticks in the springtime right before the nymph questing period, this did not have an impact on tick-borne diseases contracted by members of the household. However, this could also mean that people aren’t necessarily likely to contract tick-borne diseases on their own property, even though people are assumed to usually contract tick-borne diseases close to home [@heaneyRelationsPeriresidentialTemperature2021].  
+While my results differ from the results of the @heaneyRelationsPeriresidentialTemperature2021 study which did find a positive correlation between Lyme disease cases and the number of days where precipitation was present during the nymph development period in Pennsylvania, this is different from total precipitation overall. Perhaps the amount of precipitation is less important than the number of days where precipitation occurs, due to the requirement of persistent moisture for proper tick survival and activity [@rodgersDurationExposureSuboptimal2007].   
+Because this study investigated an observational correlation, the following limitations of the CDC data that they mention on their website must be taken into account: 1) Underreporting was possible in areas with a high incidence of the disease and overreporting was possible in areas with a low incidence of the disease, 2) Surveillance data is determined by county of residence, not the county of exposure, 3) Reporting abilities and timing may be different across counties, 4) Lyme disease cases reported to each county do not reflect the exact actual number of Lyme disease cases occurring in these regions [@cdcLymeDiseaseData2021]. Despite these limitations, this data set was used in this analysis because it is the only publicly available data set that can be used to approximate the instance of Lyme disease at a local level. Analyzing the rate of cases at the county level is appropriate for this analysis even though cases are not guaranteed to have been caused by a tick bite in that county because most cases of Lyme disease occur close to home [@eisenLinkagesWeatherClimate2016; @falcoPrevalenceIxodesDammini1988]. Another limitation with this study is that I investigated a correlation between total precipitation during the nymph tick questing period and Lyme disease cases reported to the CDC that same year because weekly and monthly reports on a county level are not publicly available data. While the vast majority of Lyme disease cases are reported to the CDC during and following the nymph questing period, there are also occasionally some cases reported during the earlier months of January and February, so this affects the accuracy of the correlation that can be drawn with this data.  
+Because Lyme disease is underreported to the CDC, future studies may want to look at electronic medical records to estimate the number of Lyme disease cases in a region. This approach may result in a more accurate number of local cases. However, Lyme disease is not only heavily underreported, it is also underdiagnosed, so while this methodology for approximating Lyme disease incidence may be more accurate, it will still not reflect the true number of Lyme disease cases [@cdcLymeDiseaseData2021]. Until Lyme disease becomes more reliably diagnosed, the lack of an accurate measurement of cases in one region is a limitation of any study attempting to determine factors that influence Lyme disease risk. Some studies have even pointed to this high rate of under diagnosis as the cause of the spread of Lyme disease = perhaps steadily rising public awareness of the presence of this disease is the reason that more Lyme disease cases are reported each year in emerging endemic regions [@scottLymeDiseasePropelled2018]. As a result, many confounding variables will need to be taken into account in future studies on Lyme disease risk factors.   
+For further study, this analysis I conducted should be repeated for years other than 2019 to see if any of these correlations replicate across time. This same type of analysis should also be performed to investigate whether there are regional differences between the effect of precipitation and Lyme disease cases in the Mid-Atlantic and the Upper Midwest emerging endemic regions. The effect of precipitation type (snow or rain) could also be investigated during the overwintering period, as the total precipitation variable that was used for this study does not differentiate between snow and rain. This may be important to investigate because of the overall importance previous research has placed on the persistent presence of snow cover for tick survival [@scottLymeDiseasePropelled2018].   
+The impact of weather variables on the incidence of Lyme disease in emerging endemic regions is important to investigate as there is still debate as to what impact these weather variables have, if any, on the incidence of Lyme disease in emerging endemic regions [@scottLymeDiseasePropelled2018]. The high statistical power of this study supports that there is a weak association between precipitation during the larvae and nymph questing period and Lyme disease cases in the Upper Midwest and Mid-Atlantic states. If further studies can replicate a correlation between precipitation during parts of the tick life cycle and Lyme disease cases, precipitation patterns during these time periods should be taken seriously as factors that influence the spread of this disease. Researchers aiming to develop future models to predict the spread of Lyme disease in order to warn the public should take the potential relationship between precipitation weather variables and Lyme disease incidence into account.
+
+```{r setup, include = FALSE}
+library("papaja")
+r_refs("r-references.bib")
+```
+
+```{r analysis-preferences}
+# Seed for random number generation
+set.seed(42)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+```
+
+```{r, include=FALSE}
+#Load packages
+library(tidyverse)
+library(ggplot2)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(varhandle)
+library(papaja)
+library(magick)
+library(broom)
+library(fs)
+library(lubridate)
+library(papaja)
+library(apa)
+library(apaTables)
+library(knitr)
+
+#Import the population data
+populationdata <-read.csv("PopulationData.csv")
+
+#Wrangle the population data
+#Filter for the new Lyme endemic states (Pennsylvania, Maryland, Virginia, Delaware, Wisconsin and Minnesota) and select the 2019 population column (POPESTIMATE2017) and the county column (STNAME, CTYNAME)
+populationdatawrangled <- populationdata %>%
+  filter(STNAME == "Pennsylvania" | STNAME == "Maryland" | STNAME == "Delaware" | STNAME == "Virginia" | STNAME == "Wisconsin"| STNAME == "Minnesota") %>%
+  select(c(STNAME, CTYNAME, POPESTIMATE2019))
+
+#Import the Lyme disease case dataset
+Lymecases <- read.csv("LD-Case-Counts-by-County-00-19 (5).csv")
+
+#Wrangle the Lyme disease case dataset
+#Filter for the new Lyme endemic states (Pennsylvania, Maryland, Virginia, Delaware, Wisconsin and Minnesota) and select the 2019 Lyme disease case column (Cases2019) and the county column (Stname, Ctyname). Rename some columns in the Lymedataset to match their corresponding column names in the population dataset.
+Lymedataset <- Lymecases %>%
+  filter(Stname == "Pennsylvania" | Stname == "Maryland" | Stname == "Delaware" | Stname == "Virginia" | Stname == "Wisconsin"| Stname == "Minnesota") %>%
+  select(c(Stname, Ctyname, Cases2019)) %>%
+  rename("STNAME" = Stname) %>%
+  rename("CTYNAME" = Ctyname)
+
+#Join the two datasets
+#Calculate the number of Lyme disease cases per capita that were reported
+#Filter out the state overall data
+#Remove Bedford City, Virginia, since that city IS incorporated into a county
+#Make the column words start with uppercase letters so that they'll match the next dataset that we want to merge with
+casepercapita <- right_join(populationdatawrangled, Lymedataset, by = c("STNAME", "CTYNAME"), keep = FALSE) %>%
+  mutate(percapita = ((Cases2019/ POPESTIMATE2019))*100000) %>%
+  filter(CTYNAME != "Delaware") %>%
+  filter(CTYNAME != "Virginia") %>%
+  filter(CTYNAME != "Maryland") %>%
+  filter(CTYNAME != "Pennsylvania") %>%
+  filter(CTYNAME != "Minnesota") %>%
+  filter(CTYNAME != "Wisconsin") %>%
+  filter(CTYNAME != "Bedford city") %>%
+  mutate(CTYNAME = str_to_title(CTYNAME))
+  
+#Read in the monthly precipitation datasets and select for the year 2019, give the #variables names, make a variable that says the state name
+PAPrecipData <- read.csv("PAPrecipData.csv", skip = 3, header = 1) %>%
+  filter(grepl('2018', Date) | grepl('2019', Date)) %>%
+  select(c(Location, Date, Value)) %>%
+  rename(CTYNAME = Location) %>%
+  rename(Month = Date) %>%
+  rename(TotalPrecipitation = Value) %>%
+  mutate(STNAME = "Pennsylvania") %>%
+  mutate(CTYNAME = str_to_title(CTYNAME))
+
+VAPrecipData <- read.csv("VAPRecipData.csv", skip = 3, header = 1) %>%
+  filter(grepl('2018', Date) | grepl('2019', Date)) %>%
+  select(c(Location, Date, Value)) %>%
+  rename(CTYNAME = Location) %>%
+  rename(Month = Date) %>%
+  rename(TotalPrecipitation = Value) %>%
+  mutate(STNAME = "Virginia") %>%
+  mutate(CTYNAME = str_to_title(CTYNAME))
+
+MDPrecipData <- read.csv("MDPrecipData.csv", skip = 3, header = 1) %>%
+  filter(grepl('2018', Date) | grepl('2019', Date)) %>%
+  select(c(Location, Date, Value)) %>%
+  rename(CTYNAME = Location) %>%
+  rename(Month = Date) %>%
+  rename(TotalPrecipitation = Value) %>%
+  mutate(STNAME = "Maryland") %>%
+  mutate(CTYNAME = str_to_title(CTYNAME))
+
+DEPrecipData <- read.csv("DEPrecipData.csv", skip = 3, header = 1) %>%
+  filter(grepl('2018', Date) | grepl('2019', Date)) %>%
+  select(c(Location, Date, Value)) %>%
+  rename(CTYNAME = Location) %>%
+  rename(Month = Date) %>%
+  rename(TotalPrecipitation = Value) %>%
+  mutate(STNAME = "Delaware") %>%
+  mutate(CTYNAME = str_to_title(CTYNAME))
+
+MNPrecipData <- read.csv("MNPrecipData.csv", skip = 3, header = 1) %>%
+  filter(grepl('2018', Date) | grepl('2019', Date)) %>%
+  select(c(Location, Date, Value)) %>%
+  rename(CTYNAME = Location) %>%
+  rename(Month = Date) %>%
+  rename(TotalPrecipitation = Value) %>%
+  mutate(STNAME = "Minnesota") %>%
+  mutate(CTYNAME = str_to_title(CTYNAME))
+
+ # as.numeric(levels(MNPrecipData$TotalPrecipitation))[MNPrecipData$TotalPrecipitation]
+
+WPrecipData <- read.csv("WPrecipData.csv", skip = 3, header = 1) %>%
+  filter(grepl('2018', Date) | grepl('2019', Date)) %>%
+  select(c(Location, Date, Value)) %>%
+  rename(CTYNAME = Location) %>%
+  rename(Month = Date) %>%
+  rename(TotalPrecipitation = Value) %>%
+  mutate(STNAME = "Wisconsin") %>%
+  mutate(CTYNAME = str_to_title(CTYNAME))
+
+#Merge each dataset with the cases per capita dataset
+
+PAData <- full_join(PAPrecipData, casepercapita, by = c("CTYNAME", "STNAME"), keep = FALSE) 
+
+VAData <- full_join(VAPrecipData, casepercapita, by = c("CTYNAME", "STNAME"), keep = FALSE) 
+
+MDData <- full_join(MDPrecipData, casepercapita, by = c("CTYNAME", "STNAME"), keep = FALSE) 
+
+MNData <- full_join(MNPrecipData, casepercapita, by = c("CTYNAME", "STNAME"), keep = FALSE) 
+
+DEData <- full_join(DEPrecipData, casepercapita, by = c("CTYNAME", "STNAME"), keep = FALSE) 
+
+WData <- full_join(WPrecipData, casepercapita, by = c("CTYNAME", "STNAME"), keep = FALSE) 
+
+#Concatenate the data all together into one big dataset, keep only the necessary columns, make a new variable City_State that combines the county/city with the state since there are some common county names across multiple states
+AllData <- rbind(PAData, VAData, MDData, MNData, DEData, WData) %>%
+select(STNAME, everything()) %>%
+select(-c(Cases2019, POPESTIMATE2019)) %>%
+ unite('City_State', STNAME:CTYNAME, remove = FALSE)
+ 
+#Wrangle Data to look at the Larvae Questing period and calculate the total precipitation for each locality during this time period
+LarvaeQuesting <- AllData %>%
+  filter(Month == as.numeric("201808") | Month == as.numeric("201809")) %>%
+  pivot_wider(names_from = Month, values_from = TotalPrecipitation) %>%
+  rename(August = "201808") %>%
+  rename(September = "201809") %>%
+  group_by(City_State) %>%
+  mutate("Total_Precipitation" = sum(August, September)) %>%
+  rename("Incidence_Rate" = percapita) %>%
+  rename("State" = STNAME)
+
+#Wrangle Data to look at the overwintering period and calculate the total precipitation for each locality during this time period
+Overwintering <- AllData %>%
+  filter(Month == as.numeric("201810") | Month == as.numeric("201811") | Month == as.numeric("201812") | Month == as.numeric("201901")| Month == as.numeric("201902")) %>%
+  pivot_wider(names_from = Month, values_from = TotalPrecipitation) %>%
+  rename(October = "201810") %>%
+  rename(November = "201811") %>%
+  rename(December = "201812") %>%
+  rename(January = "201901") %>%
+  rename(Febuary = "201902") %>%
+  group_by(City_State) %>%
+  mutate("Total_Precipitation" = sum(October, November, December, January, Febuary)) %>%
+  rename("Incidence_Rate" = percapita) %>%
+  rename("State" = STNAME)
+
+#Wrangle Data to look at the nympth development period and calculate the total precipitation for each locality during this time period
+NympthDevelopment <- AllData %>%
+  filter(Month == as.numeric("201903") | Month == as.numeric("201904")) %>%
+  pivot_wider(names_from = Month, values_from = TotalPrecipitation) %>%
+  rename(March = "201903") %>%
+  rename(April = "201904") %>%
+  group_by(City_State) %>%
+  mutate("Total_Precipitation" = sum(March, April)) %>%
+  rename("Incidence_Rate" = percapita) %>%
+  rename("State" = STNAME)
+
+#Wrangle Data to look at the nymph questing period and calculate the total precipitation for each locality during this time period
+NympthQuesting <- AllData %>%
+  filter(Month == as.numeric("201905") | Month == as.numeric("201906") | Month == as.numeric("201907")) %>%
+  pivot_wider(names_from = Month, values_from = TotalPrecipitation) %>%
+  rename(May = "201905") %>%
+  rename(June = "201906") %>%
+  rename(July = "201907") %>%
+  group_by(City_State) %>%
+  mutate("Total_Precipitation" = sum(May, June, July)) %>%
+  rename("Incidence_Rate" = percapita) %>%
+  rename("State" = STNAME)
+```
+
+```{r, include=FALSE}
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and Overwintering
+cor_overwinter <- cor.test(Overwintering$Incidence_Rate, Overwintering$Total_Precipitation,
+                        method = "pearson", data = cor_table_overwinter)
+```
+  
+```{r, echo=FALSE}
+cor_overwinter_table <- structure(
+  list(
+    `t` = "-0.53151",
+    `df` = "383",
+    `p-value` = "0.5954",
+    `95 percent confidence interval` = "-0.12675057  0.07299493",
+    `r` = "-0.02714882"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_overwinter_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the tick overwintering period and Lyme disease cases per capita the following year",
+  landscape = TRUE
+)
+
+```
+
+```{r, include=FALSE}
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and LarvaeQuesting the year prior
+cor_LarvaeQuesting <- cor.test(LarvaeQuesting$Incidence_Rate, LarvaeQuesting$Total_Precipitation,
+                        method = "pearson")
+#Calculate R^2
+R_squared_LarvaeQuesting = (0.1479622 * 0.1479622)
+```
+
+```{r, echo=FALSE}
+cor_LarvaeQuesting_table <- structure(
+  list(
+    `t` = "2.9279",
+    `df` = "383",
+    `p-value` = "0.003616",
+    `95 percent confidence interval` = "0.04873729  0.24429524",
+    `r` = "0.1479622",
+    `r^2` = "0.02189281"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_LarvaeQuesting_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the larvae questing period and Lyme disease cases per capita the following year",
+  landscape = TRUE
+)
+
+```
+
+
+```{r, include=FALSE}
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and Nymph Development that spring
+cor_NympthDevelopment <- cor.test(NympthDevelopment$Incidence_Rate, NympthDevelopment$Total_Precipitation,
+                        method = "pearson")
+```
+
+```{r, echo=FALSE}
+cor_NympthDevelopment_table <- structure(
+  list(
+    `t` = "-0.55654",
+    `df` = "383",
+    `p-value` = "0.5782",
+    `95 percent confidence interval` = "-0.12800850  0.07172295",
+    `r` = "-0.0284265"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_NympthDevelopment_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the nymph tick development period and Lyme disease cases per capita in emerging endemic areas that year",
+  landscape = TRUE
+)
+```
+
+```{r, include=FALSE}
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and Nymph questing that year
+cor_NympthQuesting <- cor.test(NympthQuesting$Incidence_Rate, NympthQuesting$Total_Precipitation,
+                        method = "pearson")
+
+#Calculate R^2
+R_squared_NymphQuesting = (0.2967351 * 0.2967351)
+```
+
+```{r, echo=FALSE}
+cor_NympthQuesting_table <- structure(
+  list(
+    `t` = "6.0811",
+    `df` = "383",
+    `p-value` = "2.891e-09",
+    `95 percent confidence interval` = "0.2028041  0.3852551",
+    `r` = "0.2967351",
+    `r^2` = "0.08805172"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_NympthQuesting_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the nymph questing period and Lyme disease cases per capita reported that year to the CDC in emerging endemic regions",
+  landscape = TRUE
+)
+```
+
+```{r, include=FALSE}
+#Exploratory Analysis starts here
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and Overwintering in the Mid-Atlantic
+OverwinterAtlantic <- Overwintering %>%
+  filter(State != "Minnseota" & State != "Wisconsin") 
+
+cor_overwinter_atlantic <- cor.test(OverwinterAtlantic$Incidence_Rate, OverwinterAtlantic$Total_Precipitation,
+                        method = "pearson")
+
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and Overwintering in the Midwest
+OverwinterMidwest <- Overwintering %>%
+  filter(State == "Minnseota" | State == "Wisconsin") 
+
+cor_overwinter_midwest <- cor.test(OverwinterMidwest$Incidence_Rate, OverwinterMidwest$Total_Precipitation,
+                        method = "pearson")
+
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and LarvaeQuesting the year prior in the mid-atlantic
+Larvae_Questing_atlantic <- LarvaeQuesting %>%
+  filter(State != "Minnseota" & State != "Wisconsin") 
+
+cor_LarvaeQuesting_atlantic <- cor.test(Larvae_Questing_atlantic$Incidence_Rate, Larvae_Questing_atlantic$Total_Precipitation,
+                        method = "pearson")
+
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and LarvaeQuesting the year prior in the mid-west
+Larvae_Questing_midwest <- LarvaeQuesting %>%
+  filter(State == "Minnseota" | State == "Wisconsin") 
+
+cor_LarvaeQuesting_midwest <- cor.test(Larvae_Questing_midwest$Incidence_Rate, Larvae_Questing_midwest$Total_Precipitation,
+                        method = "pearson")
+
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and NympthDevelopment that spring in the mid-atlantic 
+NymphDevelopment_atlantic <- NympthDevelopment %>%
+  filter(State != "Minnseota" & State != "Wisconsin") 
+
+cor_NympthDevelopment_atlantic <- cor.test(NymphDevelopment_atlantic$Incidence_Rate, NymphDevelopment_atlantic$Total_Precipitation,
+                        method = "pearson")
+
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and NympthDevelopment that spring in the midwest
+NymphDevelopment_midwest <- NympthDevelopment %>%
+  filter(State == "Minnseota" | State == "Wisconsin") 
+
+cor_NympthDevelopment_midwest <- cor.test(NymphDevelopment_midwest$Incidence_Rate, NymphDevelopment_midwest$Total_Precipitation,
+                        method = "pearson")
+
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and Nymph questing that year in the mid-atlantic 
+NympthQuesting_atlantic <- NympthQuesting %>%
+  filter(State != "Minnseota" & State != "Wisconsin")
+
+cor_NympthQuesting_atlantic <- cor.test(NympthQuesting_atlantic$Incidence_Rate, NympthQuesting_atlantic$Total_Precipitation,
+                        method = "pearson")
+
+#Calculate Pearson's Correlation Coefficient for the correlation between Lyme incidence and Nymph questing that year in the mid-west
+NympthQuesting_midwest <- NympthQuesting %>%
+  filter(State == "Minnseota" | State == "Wisconsin")
+
+cor_NympthQuesting_midwest <- cor.test(NympthQuesting_midwest$Incidence_Rate, NympthQuesting_midwest$Total_Precipitation,
+                        method = "pearson")
+```
+
+```{r, echo=FALSE}
+cor_overwinteratlantic_table <- structure(
+  list(
+    `t` = "0.45477",
+    `df` = "311",
+    `p-value` = "0.6496",
+    `95 percent confidence interval` = "-0.08532553  0.13625079",
+    `r` = "0.02577926"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_overwinteratlantic_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the tick overwintering period and Lyme disease cases per capita in emerging endemic areas of the Mid-Atlantic the following year",
+  landscape = TRUE
+)
+```
+
+
+```{r, echo=FALSE}
+cor_overwintermidwest_table <- structure(
+  list(
+    `t` = "-1.2855",
+    `df` = "70",
+    `p-value` = "0.2028",
+    `95 percent confidence interval` = "-0.37050147  0.08271026",
+    `r` = "-0.1518683"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_overwintermidwest_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the tick overwintering period and Lyme disease cases per capita in emerging endemic areas of the Upper Midwest the following year",
+  landscape = TRUE
+)
+```
+
+```{r, echo=FALSE}
+Larvae_Questing_atlantic_table <- structure(
+  list(
+    `t` = "3.156",
+    `df` = "311",
+    `p-value` = "0.001756",
+    `95 percent confidence interval` = "0.06660162 0.28152476",
+    `r` = "0.1761619",
+    `r^2` = "0.03103302"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  Larvae_Questing_atlantic_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the larvae questing period and Lyme disease cases per capita in emerging endemic areas of the Mid-Atlantic the following year",
+  landscape = TRUE
+)
+```
+
+```{r, echo=FALSE}
+Larvae_Questing_midwest_table <- structure(
+  list(
+    `t` = "0.40557",
+    `df` = "70",
+    `p-value` = "0.6863",
+    `95 percent confidence interval` = "-0.1853292  0.2769799",
+    `r` = "0.04841822"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  Larvae_Questing_midwest_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the larave questing period and Lyme disease cases per capita in emerging endemic areas of the Upper Midwest the following year",
+  landscape = TRUE
+)
+```
+
+```{r, echo=FALSE}
+cor_NympthDevelopment_midwest_table <- structure(
+  list(
+    `t` = "1.228",
+    `df` = "70",
+    `p-value` = "0.2236",
+    `95 percent confidence interval` = "-0.08945878  0.36462111",
+    `r` = "0.1452194"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_NympthDevelopment_midwest_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the nymph tick development period and Lyme disease cases per capita in emerging endemic areas of the Upper Midwest that year",
+  landscape = TRUE
+)
+```
+
+```{r, echo=FALSE}
+cor_NympthDevelopmentatlantic_table <- structure(
+  list(
+    `t` = "0.38131",
+    `df` = "311",
+    `p-value` = "0.7032",
+    `95 percent confidence interval` = "-0.08945842  0.13216110",
+    `r` = "0.02161689"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_NympthDevelopmentatlantic_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the nymph tick development period and Lyme disease cases per capita in emerging endemic areas of the Mid-Atlantic that year",
+  landscape = TRUE
+)
+```
+
+```{r, echo=FALSE}
+cor_NympthQuestingatlantic_table <- structure(
+  list(
+    `t` = "6.1137",
+    `df` = "311",
+    `p-value` = "2.914e-09",
+    `95 percent confidence interval` = "0.2248553 0.4230500",
+    `r` = "0.3275512",
+    `r^2` = "0.1072898"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_NympthQuestingatlantic_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the nymph tick questing period and Lyme disease cases per capita in emerging endemic areas of the Mid-Atlantic that year",
+  landscape = TRUE
+)
+```
+
+```{r, echo=FALSE}
+cor_NympthQuestingmidwest_table <- structure(
+  list(
+    `t` = "1.228",
+    `df` = "70",
+    `p-value` = "0.2236",
+    `95 percent confidence interval` = "-0.08945878  0.36462111",
+    `r` = "0.1452194"), 
+  row.names = 1L, class = "data.frame")
+ 
+apa_table(
+  cor_NympthQuestingmidwest_table,
+  caption = "Pearson's correlation coefficient for total precipitation during the nymph tick questing period and Lyme disease cases per capita in emerging endemic areas of the Upper Midwest that year",
+  landscape = TRUE
+)
+```
+
+```{r, echo=FALSE, fig.cap = "Total Precipitation During Nymph Development vs. Lyme Disease Cases Per Capita"}
+#Graph Nympth Development
+ggplot(data = NympthDevelopment, mapping = aes(x = Total_Precipitation, y = Incidence_Rate, color = State)) +
+  geom_point(size = 0.5) + 
+  geom_jitter() + 
+  theme_bw() + 
+  #ggtitle("Total Precipitation During Nymph Development \n vs. \n Lyme Disease Cases Per Capita") +  
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = 
+                                    "bold")) + 
+  labs(y= "Lyme Disease Cases Per 100,000 people", x = "Total Precipitation (inches)")
+```
+
+```{r, echo=FALSE, fig.cap = "Total Precipitation During Tick Overwintering vs. Lyme Disease Cases Per Capita"}
+#Graph Overwintering
+ggplot(data = Overwintering, mapping = aes(x = Total_Precipitation, y = Incidence_Rate, color = State)) +
+  geom_point(size = 0.5) + 
+  geom_jitter() + 
+  theme_bw() + 
+#  ggtitle("Total Precipitation During Tick Overwintering \n vs. \n Lyme Disease Cases Per Capita") +  
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = 
+                                    "bold")) + 
+  labs(y= "Lyme Disease Cases Per 100,000 people", x = "Total Precipitation (inches)")
+```
+
+```{r, echo=FALSE, fig.cap = "Total Precipitation During Larval Questing vs. Lyme Disease Cases Per Capita"}
+#Graph Larval Questing
+ggplot(data = LarvaeQuesting, mapping = aes(x = Total_Precipitation, y = Incidence_Rate, color = State)) +
+  geom_point(size = 0.5) + 
+  geom_jitter() + 
+  theme_bw() + 
+ # ggtitle("Total Precipitation During Larvae Questing \n vs. \n Lyme Disease Cases Per Capita") +  
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = 
+                                    "bold")) + 
+  labs(y= "Lyme Disease Cases Per 100,000 people", x = "Total Precipitation (inches)")
+```
+
+```{r, echo=FALSE, fig.cap = "Total Precipitation During Nymph Questing vs. Lyme Disease Cases Per Capita"}
+#Graph Nymph Questing
+ggplot(data = NympthQuesting, mapping = aes(x = Total_Precipitation, y = Incidence_Rate, color = State)) +
+  geom_point(size = 0.5) + 
+  geom_jitter() + 
+  theme_bw() + 
+  #ggtitle("Total Precipitation During Nymph Questing \n vs. \n Lyme Disease Cases Per Capita") +  
+  theme(plot.title = element_text(hjust = 0.5, size = 14, face = 
+                                    "bold")) + 
+  labs(y= "Lyme Disease Cases Per 100,000 people", x = "Total Precipitation (inches)")
+```
+   
+
+\newpage
+
+# References
+
+::: {#refs custom-style="Bibliography"}
+:::
+
